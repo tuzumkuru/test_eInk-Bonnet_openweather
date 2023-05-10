@@ -24,10 +24,19 @@ You can run the application using pipenv
 
     pipenv run python main.py
 
-## Problems
+## Troubleshooting
 
+There are some potential problems and solutions that you can encounter below. For other problems, feel free to get in touch
+
+### libopenjp2-7
 If you encounter an error about libopenjp2-7 you can install it using the command below:
 
     sudo apt-get install libopenjp2-7
 
-For other errors, feel free to get in touch
+### OSError: /dev/spidev0.0 does not exist
+
+This error probably means that you did not enable the SPI Interface. For Raspberry Pi open raspi-config
+
+    sudo raspi-config
+
+Go to 3. Interface Options -> I4 SPI -> Choose Yes for enabling the SPI interface. 
