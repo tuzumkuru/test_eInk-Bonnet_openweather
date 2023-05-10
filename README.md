@@ -28,7 +28,8 @@ You can run the application using pipenv
 
 There are some potential problems and solutions that you can encounter below. For other problems, feel free to get in touch
 
-### libopenjp2-7
+### ImportError: libopenjp2.so.7: cannot open shared object file
+
 If you encounter an error about libopenjp2-7 you can install it using the command below:
 
     sudo apt-get install libopenjp2-7
