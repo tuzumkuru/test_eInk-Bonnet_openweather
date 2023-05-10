@@ -20,6 +20,12 @@ python-dotenv is used to manage the environment variables. Rename .env_example f
 
 You can get your API Key after signing up and logging into OpenWeatherMap. You can find your API keys at https://home.openweathermap.org/api_keys address.
 
+You can run the application using pipenv 
+
+    pipenv run python main.py
+
+## Problems
+
 If you encounter an error about libopenjp2-7 you can install it using the command below:
 
     sudo apt-get install libopenjp2-7
