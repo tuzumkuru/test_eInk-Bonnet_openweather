@@ -93,8 +93,10 @@ class Weather_Graphics:
 
     def update_time(self):
         now = datetime.now()
+        old_time_text = self._time_text
         self._time_text = now.strftime("%I:%M %p").lstrip("0").replace(" 0", " ")
-        self.update_display()
+        if(old_time_text != self._time_text):
+            self.update_display()
 
     def update_display(self):
         self.display.fill(Adafruit_EPD.WHITE)
