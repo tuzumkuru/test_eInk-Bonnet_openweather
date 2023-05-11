@@ -1,11 +1,3 @@
-# SPDX-FileCopyrightText: 2020 Melissa LeBlanc-Williams for Adafruit Industries
-#
-# SPDX-License-Identifier: MIT
-
-"""
-This example queries the Open Weather Maps site API to find out the current
-weather for your location... and display it on a eInk Bonnet!
-"""
 import os
 import time
 import urllib.request
@@ -16,7 +8,6 @@ import board
 from adafruit_epd.ssd1675 import Adafruit_SSD1675
 from adafruit_epd.ssd1680 import Adafruit_SSD1680
 from weather_graphics import Weather_Graphics
-
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -27,12 +18,10 @@ dc = digitalio.DigitalInOut(board.D22)
 rst = digitalio.DigitalInOut(board.D27)
 busy = digitalio.DigitalInOut(board.D17)
 
-# You'll need to get a token from openweathermap.org, looks like:
-# 'b6907d289e10d714a6e88b30761fae22'
+
 OPEN_WEATHER_TOKEN = os.environ.get("WEATHER_API_TOKEN")
 
-# Use cityname, country code where countrycode is ISO3166 format.
-# E.g. "New York, US" or "London, GB"
+
 LOCATION = os.environ.get("LOCATION")
 DATA_SOURCE_URL = "http://api.openweathermap.org/data/2.5/weather"
 
@@ -46,15 +35,13 @@ params = {"q": LOCATION, "appid": OPEN_WEATHER_TOKEN}
 data_source = DATA_SOURCE_URL + "?" + urllib.parse.urlencode(params)
 
 # Initialize the Display
-display = Adafruit_SSD1680(     # Newer eInk Bonnet
-# display = Adafruit_SSD1675(   # Older eInk Bonnet
-    122, 250, spi, cs_pin=ecs, dc_pin=dc, sramcs_pin=None, rst_pin=rst, busy_pin=busy,
-)
+display = Adafruit_SSD1680(122, 250, spi, cs_pin=ecs, dc_pin=dc, sramcs_pin=None, rst_pin=rst, busy_pin=busy)
 
 display.rotation = 3
 
 gfx = Weather_Graphics(display, am_pm=True, celsius=True)
 weather_refresh = None
+
 
 while True:
     # only query the weather every 10 minutes (and on first run)
@@ -66,7 +53,7 @@ while True:
             gfx.display_weather(value)
             weather_refresh = time.monotonic()
         else:
-            print("Unable to retrieve data at {}".format(url))
+            print("Unable to retrieve data at {}".format(data_source))
 
     gfx.update_time()
-    time.sleep(300)  # wait 5 minutes before updating anything again
+    time.sleep(1)
