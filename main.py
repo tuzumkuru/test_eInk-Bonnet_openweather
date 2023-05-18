@@ -39,7 +39,7 @@ display = Adafruit_SSD1680(122, 250, spi, cs_pin=ecs, dc_pin=dc, sramcs_pin=None
 
 display.rotation = 3
 
-gfx = Weather_Graphics(display, am_pm=True, celsius=True)
+gfx = Weather_Graphics(display, am_pm=True, unit="B")
 weather_refresh = None
 
 

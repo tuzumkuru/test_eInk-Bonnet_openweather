@@ -45,9 +45,9 @@ BLACK = (0, 0, 0)
 
 
 class Weather_Graphics:
-    def __init__(self, display, *, am_pm=True, celsius=True):
+    def __init__(self, display, *, am_pm=True, unit="C"):
         self.am_pm = am_pm
-        self.celsius = celsius
+        self.unit = unit
 
         self.small_font = small_font
         self.medium_font = medium_font
@@ -58,7 +58,7 @@ class Weather_Graphics:
         self._weather_icon = None
         self._city_name = None
         self._main_text = None
-        self._temperature = None
+        self._temperature_text = None
         self._description = None
         self._time_text = None
 
@@ -78,10 +78,12 @@ class Weather_Graphics:
 
         temperature = weather["main"]["temp"] - 273.15  # its...in kelvin
         print(temperature)
-        if self.celsius:
-            self._temperature = "%d °C" % temperature
-        else:
-            self._temperature = "%d °F" % ((temperature * 9 / 5) + 32)
+        if self.unit == "C":
+            self._temperature_text = "%d °C" % temperature
+        elif self.unit == "F":
+            self._temperature_text = "%d °F" % ((temperature * 9 / 5) + 32)
+        else: 
+            self._temperature_text = "%d °C | %d °F" % (temperature, (temperature * 9 / 5) + 32)
 
         description = weather["weather"][0]["description"]
         description = description[0].upper() + description[1:]
@@ -103,58 +105,60 @@ class Weather_Graphics:
         image = Image.new("RGB", (self.display.width, self.display.height), color=WHITE)
         draw = ImageDraw.Draw(image)
 
-        # Draw the Icon
-        (font_width, font_height) = icon_font.getsize(self._weather_icon)
-        draw.text(
-            (
-                self.display.width // 2 - font_width // 2,
-                self.display.height // 2 - font_height // 2 - 5,
-            ),
-            self._weather_icon,
-            font=icon_font,
-            fill=BLACK,
-        )
-
         # Draw the city
         draw.text(
             (5, 5), self._city_name, font=self.medium_font, fill=BLACK,
         )
 
         # Draw the time
-        (font_width, font_height) = medium_font.getsize(self._time_text)
+        (font_width, font_height) = large_font.getsize(self._time_text)
         draw.text(
-            (5, font_height * 2 - 5),
+            (5, font_height * 2),
             self._time_text,
-            font=self.medium_font,
+            font=self.large_font,
             fill=BLACK,
         )
 
+        # Draw the Icon
+        (font_width, font_height) = icon_font.getsize(self._weather_icon)
+        draw.text(
+            (
+                self.display.width - font_width - 5,
+                0,
+            ),
+            self._weather_icon,
+            font=icon_font,
+            fill=BLACK,
+        )       
+
+        previous_font_height = font_height
         # Draw the main text
         (font_width, font_height) = large_font.getsize(self._main_text)
         draw.text(
-            (5, self.display.height - font_height * 2),
+            (self.display.width - font_width - 5, previous_font_height),
             self._main_text,
             font=self.large_font,
             fill=BLACK,
         )
 
+        previous_font_height = previous_font_height + font_height
         # Draw the description
         (font_width, font_height) = small_font.getsize(self._description)
         draw.text(
-            (5, self.display.height - font_height - 5),
+            (self.display.width - font_width - 5, previous_font_height),
             self._description,
             font=self.small_font,
             fill=BLACK,
         )
 
         # Draw the temperature
-        (font_width, font_height) = large_font.getsize(self._temperature)
+        (font_width, font_height) = large_font.getsize_multiline(self._temperature_text)
         draw.text(
             (
                 self.display.width - font_width - 5,
-                self.display.height - font_height * 2,
+                self.display.height - font_height - 5,
             ),
-            self._temperature,
+            self._temperature_text,
             font=self.large_font,
             fill=BLACK,
         )
